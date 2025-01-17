@@ -125,7 +125,20 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     }
 
     handleToggle(event) {
-        event.preventDefault();
+        event.stopPropagation();
+        const accountId = event.currentTarget.dataset.id;
+        
+        if (this.expandedRows.has(accountId)) {
+            this.expandedRows.delete(accountId);
+        } else {
+            this.expandedRows.add(accountId);
+        }
+        
+        // Force refresh
+        this.hierarchyData = [...this.hierarchyData];
+    }
+
+    handleToggle(event) {
         event.stopPropagation();
         const accountId = event.currentTarget.dataset.id;
         
@@ -138,8 +151,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
         // Force refresh to update visible accounts
         this.hierarchyData = [...this.hierarchyData];
     }
-
-    navigateToAccount(event) {
         event.preventDefault();
         const accountId = event.currentTarget.dataset.id;
         this[NavigationMixin.Navigate]({
@@ -171,14 +182,13 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             processed.add(account.id);
             
             // Add toggle icon class based on expanded state
-            const acc = { ...account };
-            acc.toggleIconClass = this.expandedRows.has(acc.id) ? 'toggle-icon expanded' : 'toggle-icon';
+            account.toggleIconClass = this.expandedRows.has(account.id) ? 'toggle-icon expanded' : 'toggle-icon';
             
-            result.push(acc);
+            result.push(account);
             
-            if (this.expandedRows.has(acc.id) && acc.hasChildren) {
+            if (this.expandedRows.has(account.id) && account.hasChildren) {
                 const children = this.hierarchyData
-                    .filter(a => acc.children.includes(a.id))
+                    .filter(a => account.children.includes(a.id))
                     .sort((a, b) => a.name.localeCompare(b.name));
                 
                 children.forEach(child => addAccountAndChildren(child));

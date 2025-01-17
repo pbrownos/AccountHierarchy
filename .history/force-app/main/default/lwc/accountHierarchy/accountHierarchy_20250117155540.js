@@ -125,7 +125,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     }
 
     handleToggle(event) {
-        event.preventDefault();
         event.stopPropagation();
         const accountId = event.currentTarget.dataset.id;
         
@@ -135,8 +134,12 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             this.expandedRows.add(accountId);
         }
         
-        // Force refresh to update visible accounts
+        // Force refresh
         this.hierarchyData = [...this.hierarchyData];
+    }
+
+    getToggleIconClass(accountId) {
+        return this.expandedRows.has(accountId) ? 'toggle-icon expanded' : 'toggle-icon';
     }
 
     navigateToAccount(event) {
@@ -170,15 +173,11 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             if (processed.has(account.id)) return;
             processed.add(account.id);
             
-            // Add toggle icon class based on expanded state
-            const acc = { ...account };
-            acc.toggleIconClass = this.expandedRows.has(acc.id) ? 'toggle-icon expanded' : 'toggle-icon';
+            result.push(account);
             
-            result.push(acc);
-            
-            if (this.expandedRows.has(acc.id) && acc.hasChildren) {
+            if (this.expandedRows.has(account.id) && account.hasChildren) {
                 const children = this.hierarchyData
-                    .filter(a => acc.children.includes(a.id))
+                    .filter(a => account.children.includes(a.id))
                     .sort((a, b) => a.name.localeCompare(b.name));
                 
                 children.forEach(child => addAccountAndChildren(child));

@@ -14,8 +14,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
         this.isLoading = true;
         if (data) {
             this.hierarchyData = this.processHierarchyData(data);
-            // Initially expand all rows
-            this.expandedRows = new Set(this.hierarchyData.map(acc => acc.id));
             this.error = undefined;
         } else if (error) {
             this.error = error;
@@ -27,7 +25,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     processHierarchyData(rawData) {
         const accountMap = new Map();
         
-        // Initialize accountMap
+        // Initialize accountMap with all accounts
         rawData.accounts.forEach(acc => {
             accountMap.set(acc.Id, {
                 id: acc.Id,
@@ -39,13 +37,14 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             });
         });
 
-        // Build relationships
+        // Process ownership relationships
         rawData.ownerships.forEach(own => {
             const parentId = own.Parent__c;
             const subsidiaryId = own.Subsidiary__c;
             const percentage = own.Ownership_Percentage__c;
 
             if (accountMap.has(parentId) && accountMap.has(subsidiaryId)) {
+                // Add parent-child relationship
                 accountMap.get(subsidiaryId).parents.push({
                     accountId: parentId,
                     percentage: percentage
@@ -58,10 +57,30 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             }
         });
 
-        // Find all top-level accounts (those with no parents)
-        const topLevelAccounts = Array.from(accountMap.values())
-            .filter(acc => acc.parents.length === 0)
-            .map(acc => acc.id);
+        // Find the highest level parents
+        const findHighestParents = () => {
+            const highestParents = new Set();
+            const visited = new Set();
+            
+            const traverse = (accountId) => {
+                if (visited.has(accountId)) return;
+                visited.add(accountId);
+                
+                const account = accountMap.get(accountId);
+                if (!account) return;
+                
+                if (account.parents.length === 0) {
+                    highestParents.add(accountId);
+                } else {
+                    account.parents.forEach(parent => traverse(parent.accountId));
+                }
+            };
+            
+            traverse(this.recordId);
+            return Array.from(highestParents);
+        };
+
+        const topLevelAccountIds = findHighestParents();
 
         // Calculate levels
         const calculateLevels = (accountId, level, visited = new Set()) => {
@@ -69,6 +88,8 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             visited.add(accountId);
             
             const account = accountMap.get(accountId);
+            if (!account) return;
+            
             account.level = level;
             account.indentStyle = `margin-left: ${level * 2}rem`;
             
@@ -77,55 +98,61 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             });
         };
 
-        topLevelAccounts.forEach(id => calculateLevels(id, 0));
+        topLevelAccountIds.forEach(id => calculateLevels(id, 0));
 
-        // Create flat array of all accounts in hierarchy order
-        const result = [];
-        const processed = new Set();
-
-        const addToResult = (accountId, visited = new Set()) => {
-            if (visited.has(accountId) || processed.has(accountId)) return;
-            visited.add(accountId);
+        // Create the final array
+        const flattenHierarchy = () => {
+            const result = [];
+            const processed = new Set();
             
-            const account = accountMap.get(accountId);
-            processed.add(accountId);
-
-            result.push({
-                id: account.id,
-                name: account.name,
-                level: account.level,
-                indentStyle: account.indentStyle,
-                hasChildren: account.hasChildren,
-                parents: account.parents.map(p => ({
-                    name: accountMap.get(p.accountId).name,
-                    percentage: p.percentage
-                })),
-                children: account.children.map(c => c.accountId)
-            });
-
-            // Add all children in alphabetical order
-            const sortedChildren = [...account.children]
+            const addToResult = (accountId, visited = new Set()) => {
+                if (visited.has(accountId) || processed.has(accountId)) return;
+                visited.add(accountId);
+                
+                const account = accountMap.get(accountId);
+                if (!account) return;
+                
+                processed.add(accountId);
+                result.push({
+                    id: account.id,
+                    name: account.name,
+                    level: account.level,
+                    indentStyle: account.indentStyle,
+                    hasChildren: account.hasChildren,
+                    parents: account.parents.map(p => ({
+                        name: accountMap.get(p.accountId).name,
+                        percentage: p.percentage
+                    })),
+                    children: account.children.map(c => c.accountId)
+                });
+                
+                const sortedChildren = [...account.children]
+                    .sort((a, b) => {
+                        const nameA = accountMap.get(a.accountId)?.name || '';
+                        const nameB = accountMap.get(b.accountId)?.name || '';
+                        return nameA.localeCompare(nameB);
+                    });
+                
+                sortedChildren.forEach(child => {
+                    addToResult(child.accountId, new Set(visited));
+                });
+            };
+            
+            const sortedTopLevel = topLevelAccountIds
                 .sort((a, b) => {
-                    const nameA = accountMap.get(a.accountId).name;
-                    const nameB = accountMap.get(b.accountId).name;
+                    const nameA = accountMap.get(a)?.name || '';
+                    const nameB = accountMap.get(b)?.name || '';
                     return nameA.localeCompare(nameB);
                 });
-
-            sortedChildren.forEach(child => {
-                addToResult(child.accountId, new Set(visited));
-            });
+            
+            sortedTopLevel.forEach(id => addToResult(id, new Set()));
+            return result;
         };
 
-        // Start with top-level accounts in alphabetical order
-        topLevelAccounts
-            .sort((a, b) => accountMap.get(a).name.localeCompare(accountMap.get(b).name))
-            .forEach(id => addToResult(id, new Set()));
-
-        return result;
+        return flattenHierarchy();
     }
 
     handleToggle(event) {
-        event.preventDefault();
         event.stopPropagation();
         const accountId = event.currentTarget.dataset.id;
         
@@ -135,8 +162,12 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             this.expandedRows.add(accountId);
         }
         
-        // Force refresh to update visible accounts
+        // Force refresh
         this.hierarchyData = [...this.hierarchyData];
+    }
+
+    get getToggleIconClass() {
+        return this.expandedRows.has(this.recordId) ? 'toggle-icon expanded' : 'toggle-icon';
     }
 
     navigateToAccount(event) {
@@ -161,34 +192,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     }
 
     get visibleAccounts() {
-        if (!this.hierarchyData?.length) return [];
-        
-        const result = [];
-        const processed = new Set();
-        
-        const addAccountAndChildren = (account) => {
-            if (processed.has(account.id)) return;
-            processed.add(account.id);
-            
-            // Add toggle icon class based on expanded state
-            const acc = { ...account };
-            acc.toggleIconClass = this.expandedRows.has(acc.id) ? 'toggle-icon expanded' : 'toggle-icon';
-            
-            result.push(acc);
-            
-            if (this.expandedRows.has(acc.id) && acc.hasChildren) {
-                const children = this.hierarchyData
-                    .filter(a => acc.children.includes(a.id))
-                    .sort((a, b) => a.name.localeCompare(b.name));
-                
-                children.forEach(child => addAccountAndChildren(child));
-            }
-        };
-        
-        // Get top-level accounts and process each
-        const topLevelAccounts = this.hierarchyData.filter(acc => acc.level === 0);
-        topLevelAccounts.forEach(acc => addAccountAndChildren(acc));
-        
-        return result;
+        return this.hierarchyData;
     }
 }

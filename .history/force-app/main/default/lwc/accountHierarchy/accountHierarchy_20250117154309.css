@@ -18,7 +18,7 @@
     transition: transform 0.2s ease;
 }
 
-.toggle-icon.expanded {
+.toggle-icon[data-expanded="true"] {
     transform: rotate(90deg);
 }
 

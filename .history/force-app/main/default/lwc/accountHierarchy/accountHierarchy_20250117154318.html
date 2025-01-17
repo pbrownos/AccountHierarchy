@@ -29,17 +29,15 @@
                                             data-id={account.id}
                                             onclick={handleToggle}
                                         >
-                                            <div class={account.toggleIconClass}>▶</div>
+                                            <div class="toggle-icon" data-expanded={account.isExpanded}>▶</div>
                                         </button>
                                     </template>
                                 </div>
                                 <div class="slds-col slds-size_11-of-12">
-                                    <a 
-                                        href="javascript:void(0);" 
-                                        data-id={account.id}
-                                        onclick={navigateToAccount} 
-                                        class="account-name"
-                                    >
+                                    <a href="javascript:void(0);" 
+                                       data-id={account.id}
+                                       onclick={navigateToAccount} 
+                                       class="account-name">
                                         {account.name}
                                     </a>
                                     <template if:true={account.parents.length}>
