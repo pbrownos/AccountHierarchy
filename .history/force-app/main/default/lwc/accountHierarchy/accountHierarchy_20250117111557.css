@@ -1,0 +1,3 @@
+.slds-tree__item {
+    padding-left: calc(var(--indentLevel) * 1.5rem) !important;
+}

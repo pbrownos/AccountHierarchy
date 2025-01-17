@@ -1,0 +1,32 @@
+.hierarchy-container {
+    padding: 1rem;
+}
+
+.account-item {
+    padding: 0.5rem 0;
+}
+
+.toggle-button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.toggle-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.toggle-icon.expanded {
+    transform: rotate(90deg);
+}
+
+.account-name {
+    color: rgb(1, 118, 211);
+    text-decoration: none;
+}
+
+.account-name:hover {
+    text-decoration: underline;
+}

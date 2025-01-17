@@ -1,0 +1,52 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__body">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+            
+            <template if:true={hasError}>
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>Error loading account hierarchy: {error.body.message}</h2>
+                </div>
+            </template>
+            
+            <template if:true={hasData}>
+                <div class="slds-tree_container" role="application">
+                    <ul class="slds-tree" role="tree" aria-labelledby="treeheading">
+                        <template for:each={hierarchyData} for:item="account">
+                            <li key={account.id} role="treeitem" aria-level={account.level}>
+                                <div class="slds-tree__item" style={account.indentStyle}>
+                                    <lightning-icon icon-name="standard:account" 
+                                                  size="small" 
+                                                  class="slds-m-right_x-small">
+                                    </lightning-icon>
+                                    <span class="slds-truncate">
+                                        <a href={account.id} onclick={navigateToAccount}>
+                                            {account.name}
+                                        </a>
+                                        <template if:true={account.parents.length}>
+                                            <span class="slds-text-body_small slds-text-color_weak">
+                                                (Owned by: 
+                                                <template for:each={account.parents} for:item="parent" for:index="idx">
+                                                    <span key={parent.name}>
+                                                        {parent.name} ({parent.percentage}%)
+                                                        <template if:false={isLast}>
+                                                            , 
+                                                        </template>
+                                                    </span>
+                                                </template>
+                                                )
+                                            </span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
