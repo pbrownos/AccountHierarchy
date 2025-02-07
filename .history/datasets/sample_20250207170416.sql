@@ -10,7 +10,7 @@ CREATE TABLE "Account" (
 INSERT INTO "Account" VALUES('Account-1','Harco','','','');
 INSERT INTO "Account" VALUES('Account-2','Harco Child 1','','Admitted Reinsurer','');
 INSERT INTO "Account" VALUES('Account-3','Harco Grandchild 2','','','');
-INSERT INTO "Account" VALUES('Account-4','Harco Great-Grandchild 1','','Certified','');
+INSERT INTO "Account" VALUES('Account-4','Harco Great-grandchild 1','','Certified','');
 INSERT INTO "Account" VALUES('Account-5','Sample Account for Entitlements','','','');
 INSERT INTO "Account" VALUES('Account-6','Harco Child 2','','','');
 INSERT INTO "Account" VALUES('Account-7','Harco Grandchild 1','','','');

@@ -10,7 +10,7 @@ CREATE TABLE "Account" (
 INSERT INTO "Account" VALUES('Account-1','Harco','','','');
 INSERT INTO "Account" VALUES('Account-2','Harco Child 1','','Admitted Reinsurer','');
 INSERT INTO "Account" VALUES('Account-3','Harco Grandchild 2','','','');
-INSERT INTO "Account" VALUES('Account-4','Harco Great-Grandchild 1','','Certified','');
+INSERT INTO "Account" VALUES('Account-4','Harco Great-grandchild 1','','Certified','');
 INSERT INTO "Account" VALUES('Account-5','Sample Account for Entitlements','','','');
 INSERT INTO "Account" VALUES('Account-6','Harco Child 2','','','');
 INSERT INTO "Account" VALUES('Account-7','Harco Grandchild 1','','','');
@@ -19,7 +19,7 @@ INSERT INTO "Account" VALUES('Account-9','Odyssey Reinsurance Company - CT, US',
 INSERT INTO "Account" VALUES('Account-10','Allied World Specialty Insurance Company - DE, US','','','');
 INSERT INTO "Account" VALUES('Account-11','Crum & Forster Holdings Corp. - US','','','');
 INSERT INTO "Account" VALUES('Account-12','The North River Insurance Company - NJ, US','','','');
-INSERT INTO "Account" VALUES('Account-13','Allied World Insurance Company - NH, US','','','');
+INSERT INTO "Account" VALUES('Account-13','Allied World Insurance Company - Nh, Us','','','');
 INSERT INTO "Account" VALUES('Account-14','Crum and Forster Insurance Company - NJ, US','','Admitted Reinsurer','');
 INSERT INTO "Account" VALUES('Account-15','B.C. Unlimited Liability Company - Canada','','','');
 INSERT INTO "Account" VALUES('Account-16','Allied World Assurance Company Holdings Ltd.','','Certified','');
