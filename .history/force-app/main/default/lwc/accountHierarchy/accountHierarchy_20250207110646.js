@@ -13,7 +13,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     wiredHierarchy({ error, data }) {
         this.isLoading = true;
         if (data) {
-            // Process the hierarchy using the global processed approach
+            // Build the flattened hierarchy array
             this.hierarchyData = this.processHierarchyData(data);
             // Initially expand all rows
             this.expandedRows = new Set(this.hierarchyData.map(acc => acc.id));
@@ -27,8 +27,8 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
 
     processHierarchyData(rawData) {
         const accountMap = new Map();
-
-        // Initialize the account map with each account
+        
+        // Initialize accountMap with all accounts.
         rawData.accounts.forEach(acc => {
             accountMap.set(acc.Id, {
                 id: acc.Id,
@@ -40,7 +40,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             });
         });
 
-        // Build parent–child relationships using ownership records
+        // Build relationships based on ownership records.
         rawData.ownerships.forEach(own => {
             const parentId = own.Parent__c;
             const subsidiaryId = own.Subsidiary__c;
@@ -59,33 +59,37 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             }
         });
 
-        // Identify top-level accounts (those with no parents)
-        const topLevelAccounts = Array.from(accountMap.values())
+        // Identify top-level accounts (those with no parents).
+        const topLevelAccountIds = Array.from(accountMap.values())
             .filter(acc => acc.parents.length === 0)
             .map(acc => acc.id);
 
-        // Calculate levels and set indentation style.
-        const calculateLevels = (accountId, level, visited = new Set()) => {
-            if (visited.has(accountId)) return;
-            visited.add(accountId);
+        // Calculate levels recursively (using a per‑branch path to avoid cycles).
+        const calculateLevels = (accountId, level, path = new Set()) => {
+            if (path.has(accountId)) return;
+            const newPath = new Set(path);
+            newPath.add(accountId);
             const account = accountMap.get(accountId);
             account.level = level;
             account.indentStyle = `padding-left: ${level * 4}rem`;
             account.children.forEach(child => {
-                calculateLevels(child.accountId, level + 1, visited);
+                calculateLevels(child.accountId, level + 1, newPath);
             });
         };
-        topLevelAccounts.forEach(id => calculateLevels(id, 0));
 
-        // Flatten the hierarchy into an array while using a global processed set to avoid duplicates.
+        topLevelAccountIds.forEach(id => calculateLevels(id, 0));
+
+        // Flatten the hierarchical data into an array.
+        // (We remove the global “processed” set so that an account reached via one branch
+        // doesn’t block its appearance when reached via another branch.)
         const result = [];
-        const processed = new Set();
+        const addToResult = (accountId, path = new Set()) => {
+            if (path.has(accountId)) return; // prevent cycles within the same branch
+            const newPath = new Set(path);
+            newPath.add(accountId);
 
-        const addToResult = (accountId) => {
-            if (processed.has(accountId)) return;
-            processed.add(accountId);
             const account = accountMap.get(accountId);
-            // Build parent's array (with isLast flag for formatting)
+            // Build a parents array with an isLast flag.
             const parents = account.parents.map((p, idx) => ({
                 name: accountMap.get(p.accountId).name,
                 percentage: p.percentage,
@@ -103,19 +107,19 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 itemClass: `hierarchy-item ${account.id === this.recordId ? 'current-account' : ''}`
             });
 
-            // Sort children alphabetically by account name and process them
+            // Recurse into children in alphabetical order.
             const sortedChildren = [...account.children].sort((a, b) => {
                 const nameA = accountMap.get(a.accountId).name;
                 const nameB = accountMap.get(b.accountId).name;
                 return nameA.localeCompare(nameB);
             });
-            sortedChildren.forEach(child => addToResult(child.accountId));
+            sortedChildren.forEach(child => addToResult(child.accountId, newPath));
         };
 
-        // Start from the top-level accounts (sorted alphabetically)
-        topLevelAccounts
+        // Start with top-level accounts sorted alphabetically.
+        topLevelAccountIds
             .sort((a, b) => accountMap.get(a).name.localeCompare(accountMap.get(b).name))
-            .forEach(id => addToResult(id));
+            .forEach(id => addToResult(id, new Set()));
 
         return result;
     }
@@ -129,7 +133,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
         } else {
             this.expandedRows.add(accountId);
         }
-        // Force refresh of the hierarchy data so that visibleAccounts getter recalculates.
+        // Force refresh of visible accounts.
         this.hierarchyData = [...this.hierarchyData];
     }
 
@@ -147,13 +151,13 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     }
 
     handleExpandAll() {
-        // Expand every account by adding all IDs to expandedRows
+        // Expand every account.
         this.expandedRows = new Set(this.hierarchyData.map(acc => acc.id));
         this.hierarchyData = [...this.hierarchyData];
     }
 
     handleCollapseAll() {
-        // Collapse all accounts
+        // Collapse all accounts.
         this.expandedRows.clear();
         this.hierarchyData = [...this.hierarchyData];
     }
@@ -171,16 +175,16 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
         return this.hierarchyData.some(acc => acc.parents.length > 0 || acc.children.length > 0);
     }
 
-    // Compute visible accounts from the flattened hierarchy based on the expandedRows state.
-    // This version uses a global processed set so that each account appears only once.
+    // Compute the visible accounts based on the expandedRows state.
+    // We traverse from top-level accounts, using a per‑branch path to avoid cycles.
     get visibleAccounts() {
         if (!this.hierarchyData?.length) return [];
         const result = [];
-        const processed = new Set();
+        const addAccountAndChildren = (account, path = new Set()) => {
+            if (path.has(account.id)) return;
+            const newPath = new Set(path);
+            newPath.add(account.id);
 
-        const addAccountAndChildren = (account) => {
-            if (processed.has(account.id)) return;
-            processed.add(account.id);
             const acc = { ...account };
             acc.toggleIconClass = this.expandedRows.has(acc.id)
                 ? 'toggle-icon expanded'
@@ -191,7 +195,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 const children = this.hierarchyData
                     .filter(a => acc.children.includes(a.id))
                     .sort((a, b) => a.name.localeCompare(b.name));
-                children.forEach(child => addAccountAndChildren(child));
+                children.forEach(child => addAccountAndChildren(child, newPath));
             }
         };
 
@@ -199,7 +203,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             .filter(acc => acc.level === 0)
             .sort((a, b) => a.name.localeCompare(b.name));
         topLevelAccounts.forEach(acc => addAccountAndChildren(acc));
-
         return result;
     }
 }

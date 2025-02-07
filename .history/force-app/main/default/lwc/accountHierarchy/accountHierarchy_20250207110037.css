@@ -1,59 +1,46 @@
 :host {
     display: block;
+    /* Ensure the host respects its content */
 }
 
-/* The card now grows to its content up to a maximum of 600px tall */
+/* The card is a flex container with a fixed overall height */
 .slds-card {
     display: flex;
     flex-direction: column;
-    height: auto;
-    max-height: 600px; /* Maximum height set to 600px */
+    height: 600px; /* Fixed height for the component */
     border: 1px solid rgb(221, 219, 218);
     background: white;
     border-radius: 0.25rem;
-    box-sizing: border-box;
 }
 
-/* Fixed header with an explicit height */
+/* Header remains fixed */
 .slds-card__header {
     flex: 0 0 auto;
-    height: 70px;
     background: white;
     padding: 0.75rem 1rem;
     border-bottom: 1px solid rgb(221, 219, 218);
-    box-sizing: border-box;
 }
 
-/* Fixed legend with an explicit height */
+/* Legend remains fixed */
 .legend {
     flex: 0 0 auto;
-    height: 40px;
     font-size: 0.8125rem;
     color: #706e6b;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid rgb(221, 219, 218);
     display: flex;
     align-items: center;
-    box-sizing: border-box;
 }
 
-/* The card body fills the remaining space */
-.slds-card__body {
-    flex: 1 1 auto;
-    overflow: hidden;
-    position: relative;
-    box-sizing: border-box;
-}
-
-/* The scrollable-content area now uses flex to fill the available space */
+/* The scrollable content fills the remaining space */
 .scrollable-content {
     flex: 1 1 auto;
     overflow-y: auto;
     padding: 1rem;
-    box-sizing: border-box;
+    position: relative;
 }
 
-/* Optional gradient indicator to hint at more content */
+/* Optional gradient indicator to show more content exists */
 .scrollable-content::after {
     content: "";
     position: sticky;
@@ -65,7 +52,7 @@
     pointer-events: none;
 }
 
-/* The following styles remain unchanged for the account hierarchy rows */
+/* Styling for the account hierarchy rows */
 .hierarchy-row {
     width: 100%;
     transition: background-color 0.2s ease;
@@ -75,15 +62,19 @@
 .hierarchy-row[data-level="0"] {
     background-color: rgba(243, 243, 243, 0.3);
 }
+
 .hierarchy-row[data-level="1"] {
     background-color: rgba(250, 250, 250, 0.3);
 }
+
 .hierarchy-row[data-level="2"] {
     background-color: rgba(243, 243, 243, 0.3);
 }
+
 .hierarchy-row[data-level="3"] {
     background-color: rgba(250, 250, 250, 0.3);
 }
+
 .hierarchy-row:hover {
     background-color: rgba(240, 248, 255, 0.5);
 }

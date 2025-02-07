@@ -2,12 +2,11 @@
     display: block;
 }
 
-/* The card now grows to its content up to a maximum of 600px tall */
+/* The overall card uses a fixed height */
 .slds-card {
     display: flex;
     flex-direction: column;
-    height: auto;
-    max-height: 600px; /* Maximum height set to 600px */
+    height: 600px; /* Fixed overall height */
     border: 1px solid rgb(221, 219, 218);
     background: white;
     border-radius: 0.25rem;
@@ -45,15 +44,15 @@
     box-sizing: border-box;
 }
 
-/* The scrollable-content area now uses flex to fill the available space */
+/* The scrollable-content area is sized to fill the card body exactly */
 .scrollable-content {
-    flex: 1 1 auto;
+    height: 100%;
     overflow-y: auto;
     padding: 1rem;
     box-sizing: border-box;
 }
 
-/* Optional gradient indicator to hint at more content */
+/* A subtle gradient indicator to hint at more content below */
 .scrollable-content::after {
     content: "";
     position: sticky;
@@ -65,7 +64,7 @@
     pointer-events: none;
 }
 
-/* The following styles remain unchanged for the account hierarchy rows */
+/* Row styling for the account hierarchy */
 .hierarchy-row {
     width: 100%;
     transition: background-color 0.2s ease;
