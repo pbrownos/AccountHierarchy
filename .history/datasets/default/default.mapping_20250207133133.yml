@@ -1,0 +1,336 @@
+# Editing this file is usually not recommended because it will
+# be overwritten the next time you re-capture this data.
+#
+# You can change this file's contents permanently by creating a
+# .load.yml file and re-capturing:
+#
+#  https://cumulusci.readthedocs.io/en/stable/data.html#extracting-and-loading-sample-datasets
+Insert BusinessHours:
+  sf_object: BusinessHours
+  table: BusinessHours
+  fields:
+  - FridayEndTime
+  - FridayStartTime
+  - IsActive
+  - IsDefault
+  - MondayEndTime
+  - MondayStartTime
+  - Name
+  - SaturdayEndTime
+  - SaturdayStartTime
+  - SundayEndTime
+  - SundayStartTime
+  - ThursdayEndTime
+  - ThursdayStartTime
+  - TimeZoneSidKey
+  - TuesdayEndTime
+  - TuesdayStartTime
+  - WednesdayEndTime
+  - WednesdayStartTime
+Insert FieldServiceMobileSettings:
+  sf_object: FieldServiceMobileSettings
+  table: FieldServiceMobileSettings
+  fields:
+  - AscAutomaticMode
+  - AscCancellationTimerInSec
+  - AscCompletedStatus
+  - AscOnSiteStatus
+  - AscRadiusInMeters
+  - AscTimeLimitationInMin
+  - AscTravelStatus
+  - BgGeoLocationAccuracy
+  - BgGeoLocationMinUpdateFreqMins
+  - BrandInvertedColor
+  - ContrastInvertedColor
+  - ContrastPrimaryColor
+  - ContrastQuaternaryColor
+  - ContrastQuinaryColor
+  - ContrastSecondaryColor
+  - ContrastTertiaryColor
+  - DaysAfterCurrentServiceDate
+  - DaysBeforeCurrentServiceDate
+  - DefaultListViewDeveloperName
+  - DestinationType
+  - DeveloperName
+  - FeedbackPrimaryColor
+  - FeedbackSecondaryColor
+  - FeedbackSelectedColor
+  - FutureDaysInDatePicker
+  - GeoLocationAccuracy
+  - GeoLocationMinUpdateFreqMins
+  - IsAscTimeLimitEnabled
+  - IsAssignmentNotification
+  - IsDispatchNotification
+  - IsLimitedLocTrackingEnabled
+  - IsScheduleViewResourceAbsences
+  - IsSendLocationHistory
+  - IsShowEditFullRecord
+  - IsTimeSheetEnabled
+  - IsTimeZoneEnabled
+  - Language
+  - MasterLabel
+  - MaxNumberOfServiceAppointments
+  - MetadataCacheTimeDays
+  - NavbarBackgroundColor
+  - NavbarInvertedColor
+  - PastDaysInDatePicker
+  - PrimaryBrandColor
+  - QuickStatusChangeFlowName
+  - RecordDataCacheTimeMins
+  - SecondaryBrandColor
+  - TimeIntervalSetupMins
+  - UpdateScheduleTimeMins
+Insert Folder:
+  sf_object: Folder
+  table: Folder
+  fields:
+  - AccessType
+  - DeveloperName
+  - IsReadonly
+  - Name
+  - Type
+  lookups:
+    ParentId:
+      table:
+      - Folder
+      key_field: ParentId
+      after: Insert Folder
+Insert MilestoneType:
+  sf_object: MilestoneType
+  table: MilestoneType
+  fields:
+  - Description
+  - Name
+  - RecurrenceType
+Insert Pricebook2:
+  sf_object: Pricebook2
+  table: Pricebook2
+  fields:
+  - Description
+  - IsActive
+  - Name
+Insert WorkBadgeDefinition:
+  sf_object: WorkBadgeDefinition
+  table: WorkBadgeDefinition
+  fields:
+  - Description
+  - ImageUrl
+  - IsActive
+  - IsCompanyWide
+  - IsLimitPerUser
+  - LimitNumber
+  - LimitStartDate
+  - Name
+Insert Product2:
+  sf_object: Product2
+  table: Product2
+  fields:
+  - Name
+Insert Asset:
+  sf_object: Asset
+  table: Asset
+  fields:
+  - Name
+Insert Location:
+  sf_object: Location
+  table: Location
+  fields:
+  - Name
+Insert ServiceContract:
+  sf_object: ServiceContract
+  table: ServiceContract
+  fields:
+  - Name
+Insert OperatingHours:
+  sf_object: OperatingHours
+  table: OperatingHours
+  fields:
+  - Name
+  - TimeZone
+Insert ContentAsset:
+  sf_object: ContentAsset
+  table: ContentAsset
+  fields:
+  - DeveloperName
+  - MasterLabel
+Insert DandBCompany:
+  sf_object: DandBCompany
+  table: DandBCompany
+  fields:
+  - DunsNumber
+  - Name
+Insert Account:
+  sf_object: Account
+  table: Account
+  fields:
+  - AccountNumber
+  - AccountSource
+  - AnnualRevenue
+  - BillingCity
+  - BillingCountry
+  - BillingGeocodeAccuracy
+  - BillingLatitude
+  - BillingLongitude
+  - BillingPostalCode
+  - BillingState
+  - BillingStreet
+  - CleanStatus
+  - Description
+  - DunsNumber
+  - Fax
+  - Industry
+  - Jigsaw
+  - NaicsCode
+  - NaicsDesc
+  - Name
+  - NumberOfEmployees
+  - Ownership
+  - Ownership_Percentage__c
+  - Phone
+  - Rating
+  - ShippingCity
+  - ShippingCountry
+  - ShippingGeocodeAccuracy
+  - ShippingLatitude
+  - ShippingLongitude
+  - ShippingPostalCode
+  - ShippingState
+  - ShippingStreet
+  - Sic
+  - SicDesc
+  - Site
+  - TickerSymbol
+  - Tradestyle
+  - Type
+  - Website
+  - YearStarted
+  - sims_Insurer_Type__c
+  lookups:
+    DandbCompanyId:
+      table:
+      - DandBCompany
+      key_field: DandbCompanyId
+    OperatingHoursId:
+      table:
+      - OperatingHours
+      key_field: OperatingHoursId
+    ParentId:
+      table:
+      - Account
+      key_field: ParentId
+      after: Insert Account
+Insert ContentWorkspace:
+  sf_object: ContentWorkspace
+  table: ContentWorkspace
+  fields:
+  - Description
+  - DeveloperName
+  - Name
+  - ShouldAddCreatorMembership
+  lookups:
+    WorkspaceImageId:
+      table:
+      - ContentAsset
+      key_field: WorkspaceImageId
+Insert PricebookEntry:
+  sf_object: PricebookEntry
+  table: PricebookEntry
+  fields:
+  - IsActive
+  - UnitPrice
+  - UseStandardPrice
+  lookups:
+    Pricebook2Id:
+      table:
+      - Pricebook2
+      key_field: Pricebook2Id
+    Product2Id:
+      table:
+      - Product2
+      key_field: Product2Id
+Insert AssetWarranty:
+  sf_object: AssetWarranty
+  table: AssetWarranty
+  fields:
+  - StartDate
+  lookups:
+    AssetId:
+      table:
+      - Asset
+      key_field: AssetId
+Insert Ownership__c:
+  sf_object: Ownership__c
+  table: Ownership__c
+  fields:
+  - Ownership_Percentage__c
+  - Type__c
+  lookups:
+    Parent__c:
+      table:
+      - Account
+      key_field: Parent__c
+    Subsidiary__c:
+      table:
+      - Account
+      key_field: Subsidiary__c
+Insert ContractLineItem:
+  sf_object: ContractLineItem
+  table: ContractLineItem
+  fields:
+  - Quantity
+  - UnitPrice
+  lookups:
+    PricebookEntryId:
+      table:
+      - PricebookEntry
+      key_field: PricebookEntryId
+    ServiceContractId:
+      table:
+      - ServiceContract
+      key_field: ServiceContractId
+Insert Entitlement:
+  sf_object: Entitlement
+  table: Entitlement
+  fields:
+  - CasesPerEntitlement
+  - EndDate
+  - IsPerIncident
+  - Name
+  - RemainingCases
+  - RemainingWorkOrders
+  - StartDate
+  - Type
+  - WorkOrdersPerEntitlement
+  lookups:
+    AccountId:
+      table:
+      - Account
+      key_field: AccountId
+    AssetId:
+      table:
+      - Asset
+      key_field: AssetId
+    AssetWarrantyId:
+      table:
+      - AssetWarranty
+      key_field: AssetWarrantyId
+    BusinessHoursId:
+      table:
+      - BusinessHours
+      key_field: BusinessHoursId
+    ContractLineItemId:
+      table:
+      - ContractLineItem
+      key_field: ContractLineItemId
+    LocationId:
+      table:
+      - Location
+      key_field: LocationId
+    ServiceContractId:
+      table:
+      - ServiceContract
+      key_field: ServiceContractId
+    SvcApptBookingWindowsId:
+      table:
+      - OperatingHours
+      key_field: SvcApptBookingWindowsId

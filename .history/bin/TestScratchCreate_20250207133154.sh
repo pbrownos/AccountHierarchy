@@ -8,8 +8,4 @@ cci task run dx --command "force:user:permset:assign --perm-set-name SIMSmin" --
 
 echo "SIMS permission set successfully assigned."
 
-cci task run load_dataset -o mapping datasets/mapping.yml --org DailyWorkAH
-
-echo "Data loaded successfully."
-
 cci org browser --org DailyWorkAH
