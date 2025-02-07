@@ -266,6 +266,16 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.sims_Insurer_Type__c</fieldItem>
+                <identifier>Recordsims_Insurer_Type_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Ownership_Percentage__c</fieldItem>
                 <identifier>RecordOwnership_Percentage_cField</identifier>
             </fieldInstance>
@@ -679,7 +689,7 @@
                     <name>relatedListFieldAliases</name>
                     <valueList>
                         <valueListItems>
-                            <value>NAME</value>
+                            <value>Parent__c</value>
                         </valueListItems>
                         <valueListItems>
                             <value>Ownership_Percentage__c</value>
@@ -735,9 +745,6 @@
                 <componentInstanceProperties>
                     <name>relatedListFieldAliases</name>
                     <valueList>
-                        <valueListItems>
-                            <value>NAME</value>
-                        </valueListItems>
                         <valueListItems>
                             <value>Subsidiary__c</value>
                         </valueListItems>
