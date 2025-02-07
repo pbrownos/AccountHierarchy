@@ -70,7 +70,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             
             const account = accountMap.get(accountId);
             account.level = level;
-            account.indentStyle = `padding-left: ${level * 4}rem`; // Increased indent spacing
+            account.indentStyle = `margin-left: ${level * 3}rem`; // Increased indentation
             
             account.children.forEach(child => {
                 calculateLevels(child.accountId, level + 1, visited);
@@ -97,6 +97,9 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 isLast: idx === account.parents.length - 1
             }));
 
+            // Determine if we should show the connecting line
+            const showLine = account.level > 0;
+
             result.push({
                 id: account.id,
                 name: account.name,
@@ -105,7 +108,8 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 hasChildren: account.hasChildren,
                 parents: parents,
                 children: account.children.map(c => c.accountId),
-                itemClass: `hierarchy-item ${account.id === this.recordId ? 'current-account' : ''}`
+                rowClass: `hierarchy-item ${account.id === this.recordId ? 'current-account' : ''}`,
+                showLine: showLine
             });
 
             // Add all children in alphabetical order
@@ -155,20 +159,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 actionName: 'view'
             }
         });
-    }
-
-    handleExpandAll() {
-        // Add all account IDs to expandedRows
-        this.expandedRows = new Set(this.hierarchyData.map(acc => acc.id));
-        // Force refresh
-        this.hierarchyData = [...this.hierarchyData];
-    }
-
-    handleCollapseAll() {
-        // Clear all expanded rows (including top level)
-        this.expandedRows.clear();
-        // Force refresh
-        this.hierarchyData = [...this.hierarchyData];
     }
 
     get hasError() {

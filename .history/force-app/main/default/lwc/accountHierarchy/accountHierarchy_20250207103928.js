@@ -158,14 +158,14 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     }
 
     handleExpandAll() {
-        // Add all account IDs to expandedRows
+        // Add all accounts to expandedRows
         this.expandedRows = new Set(this.hierarchyData.map(acc => acc.id));
         // Force refresh
         this.hierarchyData = [...this.hierarchyData];
     }
 
     handleCollapseAll() {
-        // Clear all expanded rows (including top level)
+        // Clear expandedRows to collapse everything
         this.expandedRows.clear();
         // Force refresh
         this.hierarchyData = [...this.hierarchyData];
@@ -198,8 +198,13 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             const acc = { ...account };
             acc.toggleIconClass = this.expandedRows.has(acc.id) ? 'toggle-icon expanded' : 'toggle-icon';
             
-            result.push(acc);
+            // Only add this account if it's top level or its parent is expanded
+            if (acc.level === 0 || (acc.parents.length > 0 && 
+                acc.parents.some(p => this.expandedRows.has(p.accountId)))) {
+                result.push(acc);
+            }
             
+            // Process children if this account is expanded
             if (this.expandedRows.has(acc.id) && acc.hasChildren) {
                 const children = this.hierarchyData
                     .filter(a => acc.children.includes(a.id))

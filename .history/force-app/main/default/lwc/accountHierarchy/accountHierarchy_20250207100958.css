@@ -1,0 +1,146 @@
+:host {
+    display: block;
+    height: auto;
+    min-height: 200px;
+}
+
+.slds-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    height: auto;
+    border: 1px solid rgb(221, 219, 218);
+    background: white;
+    border-radius: 0.25rem;
+}
+
+.slds-card__header {
+    flex: 0 0 auto;
+    background: white;
+    z-index: 2;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgb(221, 219, 218);
+}
+
+.slds-card__body {
+    flex: 1 1 auto;
+    position: relative;
+    height: auto;
+    min-height: 100px;
+}
+
+.hierarchy-container {
+    padding: 1rem;
+    height: auto;
+}
+
+.account-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 2.5rem;
+}
+
+.hierarchy-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2rem;
+}
+
+.line-marker {
+    position: absolute;
+    left: 1rem;
+    width: 1rem;
+    height: 1px;
+    background-color: #dddbda;
+    top: 50%;
+}
+
+.line-marker::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 100vh;
+    background-color: #dddbda;
+    transform: translateY(-50%);
+}
+
+.hierarchy-content {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    flex: 1;
+}
+
+.current-account {
+    background-color: #f3f2f2;
+    border-radius: 4px;
+}
+
+.current-account .hierarchy-content {
+    background-color: #f3f2f2;
+    margin: 0.25rem 0;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.legend {
+    font-size: 0.8125rem;
+    color: #706e6b;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgb(221, 219, 218);
+    display: flex;
+    align-items: center;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.legend-color {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    background-color: #f3f2f2;
+    border-radius: 2px;
+    border: 1px solid #dddbda;
+}
+
+.toggle-button {
+    border: none;
+    background: none;
+    padding: 0;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    color: #706e6b;
+}
+
+.toggle-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.toggle-icon.expanded {
+    transform: rotate(90deg);
+}
+
+.account-name {
+    color: rgb(1, 118, 211);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.account-name:hover {
+    text-decoration: underline;
+}
+
+.slds-text-body_small {
+    white-space: normal;
+    display: inline-block;
+    color: #706e6b;
+}

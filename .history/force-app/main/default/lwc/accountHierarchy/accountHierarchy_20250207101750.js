@@ -157,20 +157,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
         });
     }
 
-    handleExpandAll() {
-        // Add all account IDs to expandedRows
-        this.expandedRows = new Set(this.hierarchyData.map(acc => acc.id));
-        // Force refresh
-        this.hierarchyData = [...this.hierarchyData];
-    }
-
-    handleCollapseAll() {
-        // Clear all expanded rows (including top level)
-        this.expandedRows.clear();
-        // Force refresh
-        this.hierarchyData = [...this.hierarchyData];
-    }
-
     get hasError() {
         return this.error != null;
     }

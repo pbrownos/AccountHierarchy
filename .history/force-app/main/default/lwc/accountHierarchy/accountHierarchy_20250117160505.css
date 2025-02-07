@@ -1,0 +1,54 @@
+.hierarchy-container {
+    padding: 1rem;
+    max-height: 80vh; /* 80% of viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.account-item {
+    padding: 0.5rem 0;
+}
+
+.toggle-button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.toggle-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.toggle-icon.expanded {
+    transform: rotate(90deg);
+}
+
+.account-name {
+    color: rgb(1, 118, 211);
+    text-decoration: none;
+}
+
+.account-name:hover {
+    text-decoration: underline;
+}
+
+/* Add styles to keep header visible while scrolling */
+.slds-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.slds-card__header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+    border-bottom: 1px solid rgb(221, 219, 218);
+}
+
+.slds-card__body {
+    flex: 1;
+    min-height: 0; /* Allow container to shrink */
+}

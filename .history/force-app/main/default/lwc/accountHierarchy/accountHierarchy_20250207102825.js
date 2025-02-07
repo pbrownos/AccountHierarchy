@@ -165,8 +165,11 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     }
 
     handleCollapseAll() {
-        // Clear all expanded rows (including top level)
-        this.expandedRows.clear();
+        // Clear all expanded rows except top-level accounts
+        const topLevelIds = this.hierarchyData
+            .filter(acc => acc.level === 0)
+            .map(acc => acc.id);
+        this.expandedRows = new Set(topLevelIds);
         // Force refresh
         this.hierarchyData = [...this.hierarchyData];
     }

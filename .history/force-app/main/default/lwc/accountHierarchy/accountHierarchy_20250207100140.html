@@ -1,0 +1,78 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">
+                <span class="slds-text-heading_small">Ownership Hierarchy</span>
+            </h2>
+        </div>
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-color"></span>
+                <span>Current Account</span>
+            </div>
+        </div>
+        <div class="slds-card__body">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+            
+            <template if:true={hasError}>
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>Error loading account hierarchy: {error.body.message}</h2>
+                </div>
+            </template>
+            
+            <template if:true={hasData}>
+                <div class="hierarchy-container">
+                    <template if:false={hasRelatedAccounts}>
+                        <div class="slds-text-align_center slds-p-around_medium slds-text-color_weak">
+                            No parent or subsidiary relationships exist for this account.
+                        </div>
+                    </template>
+                    <template if:true={hasRelatedAccounts}>
+                        <template for:each={visibleAccounts} for:item="account">
+                            <div key={account.id} class={account.itemClass}>
+                                <div class="node-container" style={account.indentStyle}>
+                                    <div class="node-content">
+                                        <template if:true={account.hasChildren}>
+                                            <button 
+                                                class="slds-button slds-button_icon toggle-button" 
+                                                data-id={account.id}
+                                                onclick={handleToggle}
+                                            >
+                                                <div class={account.toggleIconClass}>▶</div>
+                                            </button>
+                                        </template>
+                                        <a 
+                                            href="javascript:void(0);" 
+                                            data-id={account.id}
+                                            onclick={navigateToAccount} 
+                                            class="account-name"
+                                        >
+                                            {account.name}
+                                        </a>&nbsp;&nbsp;
+                                        <template if:true={account.parents.length}>
+                                            <span class="slds-text-body_small slds-text-color_weak">
+                                                (Owned by: 
+                                                <template for:each={account.parents} for:item="parent" for:index="idx">
+                                                    <span key={parent.name}>
+                                                        {parent.name} ({parent.percentage}%)<template if:false={parent.isLast}>, </template>
+                                                    </span>
+                                                </template>
+                                                )
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <template if:true={account.hasChildren}>
+                                        <div class="vertical-line"></div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

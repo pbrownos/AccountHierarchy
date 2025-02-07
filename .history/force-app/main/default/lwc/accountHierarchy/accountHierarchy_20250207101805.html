@@ -1,32 +1,9 @@
 <template>
     <div class="slds-card">
         <div class="slds-card__header">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_small">Ownership Hierarchy</span>
-                    </h2>
-                </div>
-                <div class="slds-no-flex">
-                    <lightning-button-group>
-                        <lightning-button 
-                            label="Expand All" 
-                            title="Expand All" 
-                            onclick={handleExpandAll}
-                            variant="neutral"
-                            icon-name="utility:chevronright"
-                            class="slds-m-right_xx-small">
-                        </lightning-button>
-                        <lightning-button 
-                            label="Collapse All" 
-                            title="Collapse All" 
-                            onclick={handleCollapseAll}
-                            variant="neutral"
-                            icon-name="utility:chevrondown">
-                        </lightning-button>
-                    </lightning-button-group>
-                </div>
-            </header>
+            <h2 class="slds-card__header-title">
+                <span class="slds-text-heading_small">Ownership Hierarchy</span>
+            </h2>
         </div>
         <div class="legend">
             <div class="legend-item">

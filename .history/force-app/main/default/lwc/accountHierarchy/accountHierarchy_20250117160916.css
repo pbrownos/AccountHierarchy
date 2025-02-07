@@ -1,0 +1,77 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+.slds-card {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 150px); /* Account for page header and margins */
+    border: 1px solid rgb(221, 219, 218);
+    background: white;
+    border-radius: 0.25rem;
+}
+
+.slds-card__header {
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgb(221, 219, 218);
+}
+
+.slds-card__body {
+    flex: 1 1 auto;
+    min-height: 0; /* Important for Firefox */
+    position: relative;
+    height: 100%;
+}
+
+.hierarchy-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    overflow-y: scroll;
+}
+
+/* Content styling */
+.account-item {
+    padding: 0.5rem 0;
+    white-space: nowrap;
+}
+
+.toggle-button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.toggle-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.toggle-icon.expanded {
+    transform: rotate(90deg);
+}
+
+.account-name {
+    color: rgb(1, 118, 211);
+    text-decoration: none;
+}
+
+.account-name:hover {
+    text-decoration: underline;
+}
+
+/* Ensure content wraps properly */
+.slds-text-body_small {
+    white-space: normal;
+    display: inline-block;
+}

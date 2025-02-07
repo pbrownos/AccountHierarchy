@@ -8,7 +8,7 @@
     display: flex;
     flex-direction: column;
     min-height: 200px;
-    height: 600px; /* Fixed height for the component */
+    height: auto;
     border: 1px solid rgb(221, 219, 218);
     background: white;
     border-radius: 0.25rem;
@@ -22,30 +22,16 @@
     border-bottom: 1px solid rgb(221, 219, 218);
 }
 
-.slds-card__header .slds-media {
-    align-items: center;
-}
-
-.slds-card__header .slds-media__body {
-    flex: 1 1 auto;
-}
-
-.slds-card__header .slds-no-flex {
-    flex: 0 0 auto;
-}
-
 .slds-card__body {
     flex: 1 1 auto;
     position: relative;
-    height: 100%;
+    height: auto;
     min-height: 100px;
-    overflow: hidden; /* Hide overflow to prevent double scrollbars */
 }
 
 .hierarchy-container {
-    height: 100%;
-    overflow-y: auto; /* Enable vertical scrolling */
     padding: 1rem;
+    height: auto;
 }
 
 .hierarchy-row {

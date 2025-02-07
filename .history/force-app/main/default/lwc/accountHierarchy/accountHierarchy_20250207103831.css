@@ -1,17 +1,15 @@
 :host {
     display: block;
-    height: auto;
-    min-height: 200px;
 }
 
 .slds-card {
     display: flex;
     flex-direction: column;
-    min-height: 200px;
-    height: 600px; /* Fixed height for the component */
+    height: 600px;
     border: 1px solid rgb(221, 219, 218);
     background: white;
     border-radius: 0.25rem;
+    overflow: hidden; /* Ensures no double scrollbar */
 }
 
 .slds-card__header {
@@ -34,63 +32,50 @@
     flex: 0 0 auto;
 }
 
-.slds-card__body {
-    flex: 1 1 auto;
-    position: relative;
-    height: 100%;
-    min-height: 100px;
-    overflow: hidden; /* Hide overflow to prevent double scrollbars */
-}
-
 .hierarchy-container {
-    height: 100%;
-    overflow-y: auto; /* Enable vertical scrolling */
+    flex: 1 1 auto;
+    overflow-y: auto;
     padding: 1rem;
 }
 
 .hierarchy-row {
+    padding: 0.125rem 1rem;
     width: 100%;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.1s ease;
 }
 
 /* Alternating background colors for different levels */
 .hierarchy-row[data-level="0"] {
-    background-color: rgba(243, 243, 243, 0.3);
+    background-color: rgba(243, 243, 243, 0.4);
 }
 
 .hierarchy-row[data-level="1"] {
-    background-color: rgba(250, 250, 250, 0.3);
+    background-color: rgba(250, 250, 250, 0.4);
 }
 
 .hierarchy-row[data-level="2"] {
-    background-color: rgba(243, 243, 243, 0.3);
+    background-color: rgba(243, 243, 243, 0.4);
 }
 
 .hierarchy-row[data-level="3"] {
-    background-color: rgba(250, 250, 250, 0.3);
+    background-color: rgba(250, 250, 250, 0.4);
 }
 
 .hierarchy-row:hover {
     background-color: rgba(240, 248, 255, 0.5);
 }
 
-.hierarchy-item-content {
+.hierarchy-item {
     display: flex;
     align-items: center;
-    padding: 0.5rem 1rem;
     min-height: 2.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
 }
 
 .current-account {
-    background-color: #f3f2f2 !important;
+    background-color: rgba(243, 243, 243, 0.8);
     border-left: 3px solid #0070d2;
-}
-
-.tree-connector {
-    color: #706e6b;
-    font-family: monospace;
-    padding-right: 0.5rem;
-    user-select: none;
 }
 
 .toggle-button {
@@ -100,11 +85,13 @@
     margin-right: 0.5rem;
     cursor: pointer;
     color: #706e6b;
+    flex-shrink: 0;
 }
 
 .toggle-spacer {
     width: 1.5rem;
     display: inline-block;
+    flex-shrink: 0;
 }
 
 .toggle-icon {

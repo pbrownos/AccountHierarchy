@@ -70,7 +70,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
             
             const account = accountMap.get(accountId);
             account.level = level;
-            account.indentStyle = `padding-left: ${level * 4}rem`; // Increased indent spacing
+            account.indentStyle = `margin-left: ${level * 2}rem`;
             
             account.children.forEach(child => {
                 calculateLevels(child.accountId, level + 1, visited);
@@ -105,7 +105,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 hasChildren: account.hasChildren,
                 parents: parents,
                 children: account.children.map(c => c.accountId),
-                itemClass: `hierarchy-item ${account.id === this.recordId ? 'current-account' : ''}`
+                itemClass: `account-item ${account.id === this.recordId ? 'current-account' : ''}`
             });
 
             // Add all children in alphabetical order
@@ -155,20 +155,6 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 actionName: 'view'
             }
         });
-    }
-
-    handleExpandAll() {
-        // Add all account IDs to expandedRows
-        this.expandedRows = new Set(this.hierarchyData.map(acc => acc.id));
-        // Force refresh
-        this.hierarchyData = [...this.hierarchyData];
-    }
-
-    handleCollapseAll() {
-        // Clear all expanded rows (including top level)
-        this.expandedRows.clear();
-        // Force refresh
-        this.hierarchyData = [...this.hierarchyData];
     }
 
     get hasError() {
