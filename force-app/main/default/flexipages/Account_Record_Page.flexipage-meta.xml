@@ -256,76 +256,6 @@
                 <identifier>RecordOwnership_Percentage__cField</identifier>
             </fieldInstance>
         </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.sims_Custom_Address_1__c</fieldItem>
-                <identifier>RecordCustom_Address_1__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.sims_Custom_Address_2__c</fieldItem>
-                <identifier>RecordCustom_Address_2__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.sims_Custom_Address_3__c</fieldItem>
-                <identifier>RecordCustom_Address_3__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.sims_Primary_Address__c</fieldItem>
-                <identifier>RecordPrimary_Address__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.sims_customAddress1_Primary__c</fieldItem>
-                <identifier>RecordcustomAddress1_Primary__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.sims_customAddress2_Primary__c</fieldItem>
-                <identifier>RecordcustomAddress2_Primary__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.sims_customAddress3_Primary__c</fieldItem>
-                <identifier>RecordcustomAddress3_Primary__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
         <name>Facet-2a853c41-49ba-4bc8-8e76-9982a484c2d6</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -523,6 +453,9 @@
                         </valueListItems>
                         <valueListItems>
                             <value>sims_Address__CountryCode__s</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>sims_Primary__c</value>
                         </valueListItems>
                     </valueList>
                 </componentInstanceProperties>
