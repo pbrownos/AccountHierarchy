@@ -1,1 +1,1 @@
-{"Profile": {"Admin": 1}}
+{"Profile": {"Admin": 1}, "AuraDefinitionBundle": {"AccountHierarchyModal": 2}, "AuraDefinition": {"AccountHierarchyModal/AccountHierarchyModal.cmp": 3, "AccountHierarchyModal/AccountHierarchyModalController.js": 4}, "QuickAction": {"Account.View_Hierarchy": 5}, "FlexiPage": {"Account_Record_Page": 242}}

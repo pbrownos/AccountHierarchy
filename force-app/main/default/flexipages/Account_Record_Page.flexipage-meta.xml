@@ -7,133 +7,13 @@
                     <name>actionNames</name>
                     <valueList>
                         <valueListItems>
-                            <value>CallHighlightAction</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Global.NewTask</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Global.NewEvent</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>FeedItem.TextPost</value>
-                        </valueListItems>
-                        <valueListItems>
                             <value>Edit</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>FeedItem.ContentPost</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Global.NewContact</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Global.NewCase</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Global.LogACall</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Global.NewNote</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Global.NewOpportunity</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>FeedItem.RypplePost</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>FeedItem.LinkPost</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>FeedItem.PollPost</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>FeedItem.QuestionPost</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>ChangeOwnerOne</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>ChangeRecordType</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>SendSurveyInvitation</value>
                         </valueListItems>
                         <valueListItems>
                             <value>Delete</value>
                         </valueListItems>
                         <valueListItems>
-                            <value>AccountHierarchy</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Share</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>RecordShareHierarchy</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>IncludeOffline</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>CreateSurveyInvitation</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>XClean</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>PartnerScorecard</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>CreateCallList</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>PrintableView</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>CreateAccountChannel</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>CreatePartnerChannelQuickAction</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>AddToActionableList</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>BrowseCatalogs</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>CreateSalesSummaries</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Entitlements</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>GenerateDonorReceipt</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>CreateDonorBrief</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>AssignRecordLabel</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>SalesAIRelationshipGraph</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>NewGiftEntry</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>EvalAccForResearchStudy</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>SmsHighlightAction</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>EmailHighlightAction</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>WebsiteHighlightAction</value>
+                            <value>Account.View_Hierarchy</value>
                         </valueListItems>
                     </valueList>
                 </componentInstanceProperties>
