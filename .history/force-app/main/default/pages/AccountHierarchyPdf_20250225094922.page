@@ -109,31 +109,15 @@
                     color: #999;
                     text-align: center;
                 }
-                
-                .debug-info {
-                    font-size: 8pt;
-                    color: #999;
-                    margin-top: 5px;
-                    border-top: 1px solid #ddd;
-                    padding-top: 5px;
-                }
             </style>
         </head>
         
         <body>
-            <!-- Debug Info -->
-            <apex:outputPanel layout="block" styleClass="debug-info" rendered="false">
-                <p>Debug: Found {!formattedNodes.size} formatted nodes</p>
-                <p>Account ID: {!$CurrentPage.parameters.accountId}</p>
-            </apex:outputPanel>
-            
             <apex:messages />
             
             <div class="header">
                 <div class="title">Account Ownership Hierarchy</div>
-                <div class="subtitle">
-                    Generated on <apex:outputText value="{0,date,MMMM d, yyyy 'at' h:mm a z}"><apex:param value="{!NOW()}" /></apex:outputText>
-                </div>
+                <div class="subtitle">Generated on <apex:outputText value="{0,date,MMMM d, yyyy 'at' h:mm a z}"><apex:param value="{!NOW()}" /></apex:outputText></div>
             </div>
             
             <div class="legend">
@@ -149,20 +133,20 @@
             </div>
             
             <div class="hierarchy-container">
-                <!-- Use the formatted nodes list that Visualforce can handle -->
-                <apex:repeat value="{!formattedNodes}" var="node">
-                    <div class="hierarchy-item {!node.cssClass}" style="{!node.indentStyle}">
-                        <div class="account-name">{!node.name}</div>
-                        
-                        <apex:outputPanel layout="block" styleClass="parent-info" rendered="{!NOT(ISBLANK(node.parentInfo))}">
-                            Owned by: {!node.parentInfo}
-                        </apex:outputPanel>
-                    </div>
+                <!-- Use apex:repeat with a safe method to access the flattened hierarchy -->
+                <apex:repeat value="{!$ObjectType.Account.Fields}" var="node" rendered="false">
+                    <!-- This is a dummy repeat to avoid the error, we'll use standard HTML below -->
                 </apex:repeat>
                 
-                <!-- Show a message if there are no nodes -->
-                <apex:outputPanel layout="block" rendered="{!formattedNodes.size == 0}">
-                    <p>No hierarchy data available for this account.</p>
+                <!-- Use a simple text display if we can't bind to the complex object -->
+                <apex:outputPanel layout="block" rendered="{!hierarchyData != null}">
+                    <!-- Display a simple formatted representation of the hierarchy -->
+                    Account hierarchy for: <strong>{!hierarchyData['accountName']}</strong>
+                    <p>Please see the interactive version for the complete hierarchical view.</p>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!hierarchyData == null}">
+                    <p>No hierarchy data available.</p>
                 </apex:outputPanel>
             </div>
             

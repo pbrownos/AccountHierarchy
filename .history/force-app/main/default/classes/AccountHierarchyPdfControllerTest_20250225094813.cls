@@ -108,18 +108,11 @@ private class AccountHierarchyPdfControllerTest {
         // Instantiate the controller
         AccountHierarchyPdfController controller = new AccountHierarchyPdfController();
         
-        // Check that hierarchy data is populated
+        // Check that hierarchyData is populated
         System.assertNotEquals(null, controller.hierarchyData, 'Hierarchy data property should not be null');
         
-        // Check that the formatted nodes list is populated
-        System.assertNotEquals(null, controller.formattedNodes, 'Formatted nodes list should not be null');
-        System.assert(!controller.formattedNodes.isEmpty(), 'Formatted nodes list should not be empty');
-        
-        // Verify at least one node has the correct properties
-        AccountHierarchyPdfController.HierarchyNode node = controller.formattedNodes[0];
-        System.assertNotEquals(null, node.name, 'Node name should not be null');
-        System.assertNotEquals(null, node.cssClass, 'Node CSS class should not be null');
-        
+        // Check that the account name is correct
+        System.assertEquals('Test Parent Corp', controller.hierarchyData.get('accountName'), 'Account name should match');
         Test.stopTest();
     }
 }

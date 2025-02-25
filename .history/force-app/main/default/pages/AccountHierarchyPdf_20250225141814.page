@@ -132,6 +132,8 @@
             <div class="header">
                 <div class="title">Account Ownership Hierarchy</div>
                 <div class="subtitle">
+                    <apex:outputText value="For: {!hierarchyData.accountName}" rendered="{!hierarchyData != null && hierarchyData.accountName != null}" />
+                    <br/>
                     Generated on <apex:outputText value="{0,date,MMMM d, yyyy 'at' h:mm a z}"><apex:param value="{!NOW()}" /></apex:outputText>
                 </div>
             </div>
@@ -161,7 +163,7 @@
                 </apex:repeat>
                 
                 <!-- Show a message if there are no nodes -->
-                <apex:outputPanel layout="block" rendered="{!formattedNodes.size == 0}">
+                <apex:outputPanel layout="block" rendered="{!ISEMPTY(formattedNodes)}">
                     <p>No hierarchy data available for this account.</p>
                 </apex:outputPanel>
             </div>

@@ -109,31 +109,15 @@
                     color: #999;
                     text-align: center;
                 }
-                
-                .debug-info {
-                    font-size: 8pt;
-                    color: #999;
-                    margin-top: 5px;
-                    border-top: 1px solid #ddd;
-                    padding-top: 5px;
-                }
             </style>
         </head>
         
         <body>
-            <!-- Debug Info -->
-            <apex:outputPanel layout="block" styleClass="debug-info" rendered="false">
-                <p>Debug: Found {!formattedNodes.size} formatted nodes</p>
-                <p>Account ID: {!$CurrentPage.parameters.accountId}</p>
-            </apex:outputPanel>
-            
             <apex:messages />
             
             <div class="header">
                 <div class="title">Account Ownership Hierarchy</div>
-                <div class="subtitle">
-                    Generated on <apex:outputText value="{0,date,MMMM d, yyyy 'at' h:mm a z}"><apex:param value="{!NOW()}" /></apex:outputText>
-                </div>
+                <div class="subtitle">Generated on <apex:outputText value="{0,date,MMMM d, yyyy 'at' h:mm a z}"><apex:param value="{!NOW()}" /></apex:outputText></div>
             </div>
             
             <div class="legend">
@@ -161,8 +145,8 @@
                 </apex:repeat>
                 
                 <!-- Show a message if there are no nodes -->
-                <apex:outputPanel layout="block" rendered="{!formattedNodes.size == 0}">
-                    <p>No hierarchy data available for this account.</p>
+                <apex:outputPanel layout="block" rendered="{!ISEMPTY(formattedNodes)}">
+                    <p>No hierarchy data available.</p>
                 </apex:outputPanel>
             </div>
             

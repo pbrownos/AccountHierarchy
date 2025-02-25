@@ -161,7 +161,7 @@
                 </apex:repeat>
                 
                 <!-- Show a message if there are no nodes -->
-                <apex:outputPanel layout="block" rendered="{!formattedNodes.size == 0}">
+                <apex:outputPanel layout="block" rendered="{!ISEMPTY(formattedNodes)}">
                     <p>No hierarchy data available for this account.</p>
                 </apex:outputPanel>
             </div>
