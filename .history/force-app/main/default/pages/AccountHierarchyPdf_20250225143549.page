@@ -17,8 +17,6 @@
                     font-family: Arial, Helvetica, sans-serif;
                     font-size: 8pt;
                     color: #333;
-                    -webkit-print-color-adjust: exact;
-                    color-adjust: exact;
                 }
                 
                 .header {
@@ -35,7 +33,7 @@
                 .subtitle {
                     font-size: 8pt;
                     color: #666;
-                    margin-bottom: 8px;
+                    margin-bottom: 10px;
                 }
                 
                 .legend {
@@ -78,37 +76,45 @@
                 /* Rows with minimal spacing */
                 .hierarchy-row {
                     page-break-inside: avoid;
-                    margin-bottom: 0;
-                    line-height: 1.3;
+                    margin-bottom: 2px;
                 }
                 
-                /* Basic hierarchy item styling */
+                /* Basic hierarchy item styling - match LWC appearance */
                 .hierarchy-item {
-                    padding: 1px 2px;
-                    position: relative;
+                    padding: 2px 4px;
                 }
                 
-                /* Level indentation that matches the LWC closely */
-                .indent-0 { margin-left: 0; }
-                .indent-1 { margin-left: 24px; }
-                .indent-2 { margin-left: 48px; }
-                .indent-3 { margin-left: 72px; }
-                .indent-4 { margin-left: 96px; }
-                .indent-5 { margin-left: 120px; }
-                
-                /* Add visual indicators for the hierarchy levels */
-                .tree-connector {
-                    display: inline-block;
-                    font-family: monospace;
-                    font-size: 8pt;
-                    color: #999;
-                    position: absolute;
-                    left: 8px;
+                /* Level indentation that better matches the LWC */
+                .level-0 { margin-left: 0; }
+                .level-1 { 
+                    margin-left: 20px; 
+                    border-left: 1px solid #ccc;
+                    padding-left: 8px;
+                }
+                .level-2 { 
+                    margin-left: 40px;
+                    border-left: 1px solid #ccc;
+                    padding-left: 8px;
+                }
+                .level-3 { 
+                    margin-left: 60px;
+                    border-left: 1px solid #ccc;
+                    padding-left: 8px;
+                }
+                .level-4 { 
+                    margin-left: 80px;
+                    border-left: 1px solid #ccc;
+                    padding-left: 8px;
+                }
+                .level-5 { 
+                    margin-left: 100px;
+                    border-left: 1px solid #ccc;
+                    padding-left: 8px;
                 }
                 
                 /* Highlight styles */
                 .current {
-                    border-left: 3px solid #0070d2;
+                    border-left: 3px solid #0070d2 !important;
                     background-color: #f3f2f2;
                 }
                 
@@ -169,13 +175,13 @@
                 <!-- Use the formatted nodes list -->
                 <apex:repeat value="{!formattedNodes}" var="node">
                     <div class="hierarchy-row">
-                        <div class="hierarchy-item {!node.cssClass}" style="margin-left: {!node.level * 24}px;">
-                            <!-- Show tree connector symbols for child nodes - no connector needed, just indentation -->
+                        <!-- The class level-{!node.level} provides proper indentation -->
+                        <div class="hierarchy-item level-{!node.level} {!node.cssClass}">
                             <span class="account-name">{!node.name}</span>
                             
                             <!-- Parent information -->
                             <apex:outputPanel styleClass="parent-info" rendered="{!NOT(ISBLANK(node.parentInfo))}">
-                                (Owned by: {!node.parentInfo})
+                                Owned by: {!node.parentInfo}
                             </apex:outputPanel>
                         </div>
                     </div>

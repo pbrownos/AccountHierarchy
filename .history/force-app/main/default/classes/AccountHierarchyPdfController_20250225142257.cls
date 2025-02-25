@@ -5,7 +5,6 @@ public with sharing class AccountHierarchyPdfController {
      */
     public Map<String, Object> hierarchyData { get; set; }
     public List<HierarchyNode> formattedNodes { get; set; }
-    public String accountName { get; set; }
     
     /**
      * Constructor for Visualforce
@@ -20,14 +19,6 @@ public with sharing class AccountHierarchyPdfController {
             try {
                 // Get the raw hierarchy data
                 this.hierarchyData = getPdfHierarchyData(accountId);
-                
-                // Set the account name
-                if (this.hierarchyData.containsKey('accountName')) {
-                    this.accountName = (String)this.hierarchyData.get('accountName');
-                } else {
-                    this.accountName = 'Account Hierarchy';
-                }
-                
                 System.debug('PDF Controller - Hierarchy data loaded successfully');
                 
                 // Convert the raw data into a format that's easier for Visualforce to handle
@@ -38,7 +29,7 @@ public with sharing class AccountHierarchyPdfController {
                     for (Map<String, Object> node : flattenedHierarchy) {
                         // Add null checks to prevent NullPointerException
                         String name = (String)node.get('name');
-                        Integer level = node.get('level') != null ? Integer.valueOf(node.get('level')) : 0;
+                        Integer level = node.get('level') != null ? (Integer)node.get('level') : 0;
                         Boolean isCurrentAccount = node.get('isCurrentAccount') != null ? (Boolean)node.get('isCurrentAccount') : false;
                         String insurerType = (String)node.get('insurerType');
                         String parentInfo = (String)node.get('parentInfo');
@@ -148,9 +139,6 @@ public with sharing class AccountHierarchyPdfController {
             // Add parameters
             pdf.getParameters().put('accountId', accountId);
             
-            // Set redirect to false to ensure view state is preserved
-            pdf.setRedirect(false);
-            
             // Get the PDF content
             Blob pdfBlob;
             
@@ -158,19 +146,12 @@ public with sharing class AccountHierarchyPdfController {
             if (Test.isRunningTest()) {
                 pdfBlob = Blob.valueOf('Test PDF Content');
             } else {
-                // Standard way to get content in Salesforce
-                try {
-                    pdfBlob = pdf.getContent();
-                    System.debug('Successfully generated PDF content');
-                } catch (Exception e) {
-                    System.debug('Error in getContent: ' + e.getMessage());
-                    throw e;
-                }
+                pdfBlob = pdf.getContent();
             }
             
             // Convert to base64 for the component to handle
             String base64Data = EncodingUtil.base64Encode(pdfBlob);
-            System.debug('Generate Hierarchy PDF - Completed successfully, base64 length: ' + base64Data.length());
+            System.debug('Generate Hierarchy PDF - Completed successfully');
             return base64Data;
         } catch (Exception e) {
             System.debug('Generate Hierarchy PDF - Error: ' + e.getMessage() + ' Stack: ' + e.getStackTraceString());
@@ -298,43 +279,8 @@ public with sharing class AccountHierarchyPdfController {
             
             System.debug('Get PDF Hierarchy Data - Created flattened hierarchy with ' + flattenedHierarchy.size() + ' nodes');
             
-            // Check if we have all accounts represented
-            if (flattenedHierarchy.size() < accountNodes.size()) {
-                System.debug('WARNING: Not all accounts are included in the flattened hierarchy.');
-                System.debug('Total accounts: ' + accountNodes.size() + ', Flattened hierarchy size: ' + flattenedHierarchy.size());
-                
-                // Try to include missing accounts
-                Set<Id> includedAccountIds = new Set<Id>();
-                for (Map<String, Object> node : flattenedHierarchy) {
-                    includedAccountIds.add((Id)node.get('id'));
-                }
-                
-                for (Id accId : accountNodes.keySet()) {
-                    if (!includedAccountIds.contains(accId)) {
-                        Map<String, Object> missingNode = accountNodes.get(accId);
-                        System.debug('Adding missing account to flattened hierarchy: ' + missingNode.get('name'));
-                        flattenedHierarchy.add(missingNode);
-                    }
-                }
-                
-                System.debug('Updated flattened hierarchy size: ' + flattenedHierarchy.size());
-            }
-            
-            // First filter the flattened hierarchy to remove duplicates
-            Set<Id> processedIds = new Set<Id>();
-            List<Map<String, Object>> uniqueHierarchy = new List<Map<String, Object>>();
-            
-            for(Map<String, Object> node : flattenedHierarchy) {
-                Id nodeId = (Id)node.get('id');
-                if(!processedIds.contains(nodeId)) {
-                    uniqueHierarchy.add(node);
-                    processedIds.add(nodeId);
-                }
-            }
-            
-            // Don't sort the flattened hierarchy - preserve the hierarchical order
-            // Instead of: flattenedHierarchy = sortNodes(flattenedHierarchy);
-            flattenedHierarchy = uniqueHierarchy;
+            // Sort the flattened hierarchy by custom sort rules
+            flattenedHierarchy = sortNodes(flattenedHierarchy);
             
             // Get the complete hierarchy for the specific account
             Map<String, Object> accountHierarchy = accountNodes.get(accountId);
@@ -410,66 +356,28 @@ public with sharing class AccountHierarchyPdfController {
             return;
         }
         
-        System.debug('Starting flattenHierarchy with ' + nodes.size() + ' nodes');
+        // Sort the nodes by name before processing
+        List<Map<String, Object>> sortedNodes = sortNodes(nodes);
         
-        // Match the LWC structure - we want to preserve the parent-child relationships in order
-        // and not sort alphabetically at each level
-        for (Map<String, Object> node : nodes) {
+        for (Map<String, Object> node : sortedNodes) {
             // Add the current node to the flattened list
             flattenedList.add(node);
-            System.debug('Added node to flattened list: ' + node.get('name'));
             
             // Process children
             List<Map<String, Object>> childRefs = (List<Map<String, Object>>)node.get('children');
-            if (childRefs == null || childRefs.isEmpty()) {
-                System.debug('No children for node: ' + node.get('name'));
-                continue;
-            }
-            
-            System.debug('Processing ' + childRefs.size() + ' children for node: ' + node.get('name'));
             List<Map<String, Object>> childNodes = new List<Map<String, Object>>();
             
-            // Get the full node objects for each child reference and maintain the order from parent
+            // Get the full node objects for each child reference
             for (Map<String, Object> childRef : childRefs) {
                 Id childId = (Id)childRef.get('id');
                 if (nodeMap.containsKey(childId)) {
-                    Map<String, Object> childNode = nodeMap.get(childId);
-                    // Set the explicit level based on parent's level + 1
-                    Integer parentLevel = Integer.valueOf(node.get('level'));
-                    childNode.put('level', parentLevel + 1);
-                    childNodes.add(childNode);
-                    System.debug('Added child to process: ' + childNode.get('name') + ' at level ' + (parentLevel + 1));
-                } else {
-                    System.debug('WARNING: Child ID not found in nodeMap: ' + childId);
+                    childNodes.add(nodeMap.get(childId));
                 }
             }
             
             // Recursively process children
             flattenHierarchy(childNodes, flattenedList, nodeMap);
         }
-    }
-    
-    /**
-     * Check for possible view state issues with large data sets
-     */
-    private static Boolean hasLargeDataSet(List<Map<String, Object>> flattenedHierarchy) {
-        Integer approximateSize = 0;
-        
-        for (Map<String, Object> node : flattenedHierarchy) {
-            String name = (String)node.get('name');
-            String parentInfo = (String)node.get('parentInfo');
-            
-            // Rough estimate of object size in bytes
-            approximateSize += (name != null ? name.length() : 0) * 2;
-            approximateSize += (parentInfo != null ? parentInfo.length() : 0) * 2;
-            approximateSize += 100; // Base size for other properties
-        }
-        
-        // Log the approximate size for debugging
-        System.debug('Approximate data size: ' + approximateSize + ' bytes');
-        
-        // If over 100KB, we might have view state issues
-        return approximateSize > 100000;
     }
     
     /**

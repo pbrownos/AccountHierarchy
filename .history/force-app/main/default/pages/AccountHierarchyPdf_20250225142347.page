@@ -13,35 +13,39 @@
                     }
                 }
                 
+                /* Ensure proper page breaks */
+                .hierarchy-item {
+                    page-break-inside: avoid;
+                }
+                
                 body {
                     font-family: Arial, Helvetica, sans-serif;
-                    font-size: 8pt;
+                    font-size: 10pt;
                     color: #333;
-                    -webkit-print-color-adjust: exact;
-                    color-adjust: exact;
                 }
                 
                 .header {
                     text-align: center;
-                    margin-bottom: 10px;
+                    margin-bottom: 20px;
                 }
                 
                 .title {
-                    font-size: 14pt;
+                    font-size: 16pt;
                     font-weight: bold;
                     margin-bottom: 5px;
                 }
                 
                 .subtitle {
-                    font-size: 8pt;
+                    font-size: 10pt;
                     color: #666;
-                    margin-bottom: 8px;
+                    margin-bottom: 15px;
                 }
                 
                 .legend {
-                    margin: 6px 0;
-                    padding: 4px;
+                    margin: 10px 0;
+                    padding: 5px;
                     border: 1px solid #ddd;
+                    display: table;
                     width: 100%;
                 }
                 
@@ -71,42 +75,24 @@
                 }
                 
                 .hierarchy-container {
-                    margin-top: 10px;
-                    page-break-after: auto;
+                    margin-top: 15px;
                 }
                 
-                /* Rows with minimal spacing */
-                .hierarchy-row {
-                    page-break-inside: avoid;
-                    margin-bottom: 0;
-                    line-height: 1.3;
-                }
-                
-                /* Basic hierarchy item styling */
                 .hierarchy-item {
-                    padding: 1px 2px;
-                    position: relative;
+                    margin-bottom: 5px;
+                    padding: 5px;
+                    border-left: 3px solid transparent;
+                    page-break-inside: avoid;
                 }
                 
-                /* Level indentation that matches the LWC closely */
-                .indent-0 { margin-left: 0; }
-                .indent-1 { margin-left: 24px; }
-                .indent-2 { margin-left: 48px; }
-                .indent-3 { margin-left: 72px; }
-                .indent-4 { margin-left: 96px; }
-                .indent-5 { margin-left: 120px; }
+                /* Add visual indicators for hierarchy levels */
+                .hierarchy-level-0 { margin-left: 0; }
+                .hierarchy-level-1 { margin-left: 20px; border-left: 1px dotted #aaa; }
+                .hierarchy-level-2 { margin-left: 40px; border-left: 1px dotted #aaa; }
+                .hierarchy-level-3 { margin-left: 60px; border-left: 1px dotted #aaa; }
+                .hierarchy-level-4 { margin-left: 80px; border-left: 1px dotted #aaa; }
+                .hierarchy-level-5 { margin-left: 100px; border-left: 1px dotted #aaa; }
                 
-                /* Add visual indicators for the hierarchy levels */
-                .tree-connector {
-                    display: inline-block;
-                    font-family: monospace;
-                    font-size: 8pt;
-                    color: #999;
-                    position: absolute;
-                    left: 8px;
-                }
-                
-                /* Highlight styles */
                 .current {
                     border-left: 3px solid #0070d2;
                     background-color: #f3f2f2;
@@ -125,30 +111,41 @@
                 }
                 
                 .parent-info {
-                    font-size: 7.5pt;
+                    font-size: 9pt;
                     color: #666;
                     font-style: italic;
-                    display: inline-block;
-                    padding-left: 5px;
+                    margin-left: 10px;
                 }
                 
                 .footer {
-                    margin-top: 15px;
-                    font-size: 7pt;
+                    margin-top: 20px;
+                    font-size: 8pt;
                     color: #999;
                     text-align: center;
+                }
+                
+                .debug-info {
+                    font-size: 8pt;
+                    color: #999;
+                    margin-top: 5px;
+                    border-top: 1px solid #ddd;
+                    padding-top: 5px;
                 }
             </style>
         </head>
         
         <body>
+            <!-- Debug Info -->
+            <apex:outputPanel layout="block" styleClass="debug-info" rendered="false">
+                <p>Debug: Found {!formattedNodes.size} formatted nodes</p>
+                <p>Account ID: {!$CurrentPage.parameters.accountId}</p>
+            </apex:outputPanel>
+            
             <apex:messages />
             
             <div class="header">
                 <div class="title">Account Ownership Hierarchy</div>
                 <div class="subtitle">
-                    <apex:outputText value="For: {!accountName}" rendered="{!NOT(ISBLANK(accountName))}" />
-                    <br/>
                     Generated on <apex:outputText value="{0,date,MMMM d, yyyy 'at' h:mm a z}"><apex:param value="{!NOW()}" /></apex:outputText>
                 </div>
             </div>
@@ -166,18 +163,24 @@
             </div>
             
             <div class="hierarchy-container">
-                <!-- Use the formatted nodes list -->
+                <!-- Use the formatted nodes list that Visualforce can handle -->
                 <apex:repeat value="{!formattedNodes}" var="node">
-                    <div class="hierarchy-row">
-                        <div class="hierarchy-item {!node.cssClass}" style="margin-left: {!node.level * 24}px;">
-                            <!-- Show tree connector symbols for child nodes - no connector needed, just indentation -->
-                            <span class="account-name">{!node.name}</span>
-                            
-                            <!-- Parent information -->
-                            <apex:outputPanel styleClass="parent-info" rendered="{!NOT(ISBLANK(node.parentInfo))}">
-                                (Owned by: {!node.parentInfo})
-                            </apex:outputPanel>
+                    <div class="hierarchy-item hierarchy-level-{!node.level} {!node.cssClass}">
+                        <div class="account-name">
+                            <!-- Add branch indicator based on level -->
+                            <apex:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;" escape="false" rendered="{!node.level > 0}" styleClass="indent-space" />
+                            <apex:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;" escape="false" rendered="{!node.level > 1}" styleClass="indent-space" />
+                            <apex:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;" escape="false" rendered="{!node.level > 2}" styleClass="indent-space" />
+                            <apex:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;" escape="false" rendered="{!node.level > 3}" styleClass="indent-space" />
+                            <apex:outputText value="&nbsp;&nbsp;&nbsp;&nbsp;" escape="false" rendered="{!node.level > 4}" styleClass="indent-space" />
+                            <!-- Add branch indicator if not at root level -->
+                            <apex:outputText value="└─ " rendered="{!node.level > 0}" escape="false" style="color: #999;" />
+                            {!node.name}
                         </div>
+                        
+                        <apex:outputPanel layout="block" styleClass="parent-info" rendered="{!NOT(ISBLANK(node.parentInfo))}">
+                            Owned by: {!node.parentInfo}
+                        </apex:outputPanel>
                     </div>
                 </apex:repeat>
                 

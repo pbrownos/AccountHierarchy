@@ -320,21 +320,8 @@ public with sharing class AccountHierarchyPdfController {
                 System.debug('Updated flattened hierarchy size: ' + flattenedHierarchy.size());
             }
             
-            // First filter the flattened hierarchy to remove duplicates
-            Set<Id> processedIds = new Set<Id>();
-            List<Map<String, Object>> uniqueHierarchy = new List<Map<String, Object>>();
-            
-            for(Map<String, Object> node : flattenedHierarchy) {
-                Id nodeId = (Id)node.get('id');
-                if(!processedIds.contains(nodeId)) {
-                    uniqueHierarchy.add(node);
-                    processedIds.add(nodeId);
-                }
-            }
-            
-            // Don't sort the flattened hierarchy - preserve the hierarchical order
-            // Instead of: flattenedHierarchy = sortNodes(flattenedHierarchy);
-            flattenedHierarchy = uniqueHierarchy;
+            // Sort the flattened hierarchy by custom sort rules
+            flattenedHierarchy = sortNodes(flattenedHierarchy);
             
             // Get the complete hierarchy for the specific account
             Map<String, Object> accountHierarchy = accountNodes.get(accountId);
@@ -412,9 +399,10 @@ public with sharing class AccountHierarchyPdfController {
         
         System.debug('Starting flattenHierarchy with ' + nodes.size() + ' nodes');
         
-        // Match the LWC structure - we want to preserve the parent-child relationships in order
-        // and not sort alphabetically at each level
-        for (Map<String, Object> node : nodes) {
+        // Sort the nodes by name before processing
+        List<Map<String, Object>> sortedNodes = sortNodes(nodes);
+        
+        for (Map<String, Object> node : sortedNodes) {
             // Add the current node to the flattened list
             flattenedList.add(node);
             System.debug('Added node to flattened list: ' + node.get('name'));
@@ -429,16 +417,12 @@ public with sharing class AccountHierarchyPdfController {
             System.debug('Processing ' + childRefs.size() + ' children for node: ' + node.get('name'));
             List<Map<String, Object>> childNodes = new List<Map<String, Object>>();
             
-            // Get the full node objects for each child reference and maintain the order from parent
+            // Get the full node objects for each child reference
             for (Map<String, Object> childRef : childRefs) {
                 Id childId = (Id)childRef.get('id');
                 if (nodeMap.containsKey(childId)) {
-                    Map<String, Object> childNode = nodeMap.get(childId);
-                    // Set the explicit level based on parent's level + 1
-                    Integer parentLevel = Integer.valueOf(node.get('level'));
-                    childNode.put('level', parentLevel + 1);
-                    childNodes.add(childNode);
-                    System.debug('Added child to process: ' + childNode.get('name') + ' at level ' + (parentLevel + 1));
+                    childNodes.add(nodeMap.get(childId));
+                    System.debug('Added child to process: ' + nodeMap.get(childId).get('name'));
                 } else {
                     System.debug('WARNING: Child ID not found in nodeMap: ' + childId);
                 }
