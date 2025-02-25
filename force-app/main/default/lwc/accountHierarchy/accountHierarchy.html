@@ -27,6 +27,15 @@
                             class="slds-m-right_xx-small">
                         </lightning-button>
                         <lightning-button 
+                            label="Export PDF" 
+                            title="Export Hierarchy as PDF" 
+                            onclick={handleExportPdf}
+                            variant="neutral"
+                            icon-name="utility:download"
+                            class="slds-m-right_xx-small"
+                            disabled={isExporting}>
+                        </lightning-button>
+                        <lightning-button 
                             label="Refresh" 
                             title="Refresh" 
                             onclick={handleRefresh}
@@ -36,6 +45,26 @@
                     </lightning-button-group>
                 </div>
             </header>
+        </div>
+
+        <!-- PDF Export loading and error handling -->
+        <div if:true={isExporting} class="slds-is-relative slds-p-around_small">
+            <lightning-spinner alternative-text="Generating PDF" size="small"></lightning-spinner>
+            <div class="slds-text-align_center slds-p-top_small">Generating PDF...</div>
+        </div>
+
+        <div if:true={exportError} class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-m-bottom_small" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <h2>Error exporting PDF: {exportError}</h2>
+            <div class="slds-notify__close">
+                <lightning-button-icon 
+                    icon-name="utility:close" 
+                    variant="bare-inverse" 
+                    size="small"
+                    alternative-text="Close"
+                    onclick={dismissExportError}>
+                </lightning-button-icon>
+            </div>
         </div>
 
         <!-- Legend with three entries -->

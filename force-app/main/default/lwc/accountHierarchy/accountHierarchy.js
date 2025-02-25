@@ -1,6 +1,7 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getAccountHierarchy from '@salesforce/apex/AccountHierarchyController.getAccountHierarchy';
+import generateHierarchyPdf from '@salesforce/apex/AccountHierarchyPdfController.generateHierarchyPdf';
 import { refreshApex } from '@salesforce/apex';
 
 export default class AccountHierarchy extends NavigationMixin(LightningElement) {
@@ -9,6 +10,8 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     @track error;
     @track isLoading = true;
     @track expandedRows = new Set();
+    @track isExporting = false;
+    @track exportError = null;
 
     // Store the wired result for refreshApex.
     wiredResult;
@@ -115,7 +118,7 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
                 hasChildren: account.hasChildren,
                 parents: parents,
                 children: account.children.map(c => c.accountId),
-                itemClass: `hierarchy-item ${account.id === this.recordId ? 'current-account' : ''}${extraClass}`
+                itemClass: `hierarchy-item-content${account.id === this.recordId ? ' current-account' : ''}${extraClass}`
             });
 
             // Recurse into children in alphabetical order.
@@ -174,6 +177,52 @@ export default class AccountHierarchy extends NavigationMixin(LightningElement) 
     // New refresh button handler.
     handleRefresh() {
         refreshApex(this.wiredResult);
+    }
+
+    // PDF Export function
+    handleExportPdf() {
+        this.isExporting = true;
+        this.exportError = null;
+        
+        generateHierarchyPdf({ accountId: this.recordId })
+            .then(result => {
+                // Create a blob from the base64 data
+                const byteCharacters = atob(result);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+                
+                // Create a link and trigger download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(blob);
+                
+                // Generate the filename with the account name and timestamp
+                const accountName = this.hierarchyData.find(acc => acc.id === this.recordId)?.name || 'Account';
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                downloadLink.download = `${accountName}_Hierarchy_${timestamp}.pdf`;
+                
+                // Append to body, click and clean up
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                setTimeout(() => {
+                    document.body.removeChild(downloadLink);
+                    URL.revokeObjectURL(downloadLink.href);
+                }, 100);
+                
+                this.isExporting = false;
+            })
+            .catch(error => {
+                this.exportError = error.body?.message || 'Unknown error generating PDF';
+                this.isExporting = false;
+                console.error('Error generating PDF', error);
+            });
+    }
+    
+    dismissExportError() {
+        this.exportError = null;
     }
 
     get hasError() {
