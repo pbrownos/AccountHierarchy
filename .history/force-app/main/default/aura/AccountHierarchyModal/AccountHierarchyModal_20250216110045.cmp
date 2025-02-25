@@ -1,0 +1,10 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForRecordHome,force:hasSObjectName,force:lightningQuickAction" access="global">
+    <!-- Attribute to receive the current recordId -->
+    <aura:attribute name="recordId" type="Id" />
+    
+    <!-- Automatically call the openModal handler on component initialization -->
+    <aura:handler name="init" value="{!this}" action="{!c.openModal}" />
+    
+    <!-- Include the overlay library -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+</aura:component>
